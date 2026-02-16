@@ -241,12 +241,13 @@ public class FishStageSelector : MonoBehaviour
     }
     void SelectLevel(string s)
     {
-        if (!s.TryFromJson(out List<FishNode.FishRunDataDTO> stage, false))
+        if (!s.TryFromJson(out FishMapper.DTOListWrapper wrapper, true) || wrapper?.list == null)
         {
-            Debug.LogError("Invalid Level : " + s.DecryptString());
+            Debug.LogError("Invalid Level: " + s.DecryptString());
             return;
         }
-        SceneLoader.LoadScenePair(gameScene, () => FishTools.StartStage(stage));
+
+        SceneLoader.LoadScenePair(gameScene, () => FishTools.StartStage(wrapper.list));
     }
     private void DestroyAll()
     {

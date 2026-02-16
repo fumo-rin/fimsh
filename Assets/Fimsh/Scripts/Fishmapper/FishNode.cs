@@ -43,7 +43,8 @@ public abstract class FishNode : MonoBehaviour
 
     public enum FishNodeType
     {
-        FishItem
+        FishItem,
+        MusicNode
     }
 
     [System.Serializable]
@@ -78,9 +79,12 @@ public abstract class FishNode : MonoBehaviour
         switch (dto.nodeType)
         {
             case FishNodeType.FishItem:
-                dto.jsonData.TryFromJson(out FishItemNode.FishItemRunData r, true);
-                return r;
+                dto.jsonData.TryFromJson(out FishItemNode.FishItemRunData fishData, true);
+                return fishData;
 
+            case FishNodeType.MusicNode:
+                dto.jsonData.TryFromJson(out FishMusicNode.FishMusicData music, true);
+                return music;
             default:
                 Debug.LogError($"Unsupported node type: {dto.nodeType}");
                 return null;

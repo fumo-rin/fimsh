@@ -12,6 +12,7 @@ public class FishTools : MonoBehaviour
     }
     const string StageSpawn = "STAGE_SPAWN";
     [SerializeField] List<GameObject> prefabs = new();
+    [SerializeField] List<MusicWrapper> musicPiece = new();
     HashSet<GameObject> spawnedObjects = new();
     public bool IsGameScene => gameScene.IsLastLoaded;
     [SerializeField] ScenePairSO gameScene, sceneSelect;
@@ -20,6 +21,10 @@ public class FishTools : MonoBehaviour
         StageRoutines.StopAll();
     }
     static Dictionary<string, GameObject> lookup = new() { };
+    public static MusicWrapper GetMusic(int index)
+    {
+        return instance.musicPiece[index % instance.musicPiece.Count];
+    }
     public static GameObject GetItem(string id) => lookup.GetValueOrDefault(id);
     private void Start()
     {

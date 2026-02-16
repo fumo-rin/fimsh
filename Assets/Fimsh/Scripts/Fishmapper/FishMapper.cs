@@ -77,7 +77,7 @@ public class FishMapper : MonoBehaviour
 
     #region Export / Import
     [Serializable]
-    class DTOListWrapper
+    public class DTOListWrapper
     {
         public List<FishNode.FishRunDataDTO> list;
         public DTOListWrapper(List<FishNode.FishRunDataDTO> l) => list = l;
