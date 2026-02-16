@@ -53,6 +53,18 @@ public class FishMusicNode : FishNode
             FishTools.GetMusic((int)action).Play();
             yield break;
         }
+
+        public override FishRunData Copy()
+        {
+            return new FishMusicData
+            {
+                runSeperately = this.runSeperately,
+                nodeType = FishNodeType.MusicNode,
+                action = action,
+                order = order
+            };
+        }
+
         public override int FishValue => 0;
     }
 }

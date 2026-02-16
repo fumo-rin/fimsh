@@ -44,7 +44,8 @@ public abstract class FishNode : MonoBehaviour
     public enum FishNodeType
     {
         FishItem,
-        MusicNode
+        MusicNode,
+        HazardSpammer
     }
 
     [System.Serializable]
@@ -56,6 +57,7 @@ public abstract class FishNode : MonoBehaviour
 
         public abstract int FishValue { get; }
         public abstract IEnumerator RunData();
+        public abstract FishRunData Copy();
     }
 
     [System.Serializable]
@@ -76,22 +78,21 @@ public abstract class FishNode : MonoBehaviour
 
     public static FishRunData FromDTO(FishRunDataDTO dto)
     {
-        switch (dto.nodeType)
+        return dto.nodeType switch
         {
-            case FishNodeType.FishItem:
-                dto.jsonData.TryFromJson(out FishItemNode.FishItemRunData fishData, true);
-                return fishData;
-
-            case FishNodeType.MusicNode:
-                dto.jsonData.TryFromJson(out FishMusicNode.FishMusicData music, true);
-                return music;
-            default:
-                Debug.LogError($"Unsupported node type: {dto.nodeType}");
-                return null;
+            FishNodeType.FishItem => dto.jsonData.TryFromJson<FishItemNode.FishItemRunData>(out var fish, true) ? fish : null,
+            FishNodeType.MusicNode => dto.jsonData.TryFromJson<FishMusicNode.FishMusicData>(out var music, true) ? music : null,
+            FishNodeType.HazardSpammer => dto.jsonData.TryFromJson<HazardSpammerNode.HazardSpammerData>(out var hazard, true) ? hazard : null,
+            _ => ThrowUnsupportedNode(dto.nodeType)
+        };
+        FishRunData ThrowUnsupportedNode(FishNodeType type)
+        {
+            Debug.LogError($"Unsupported node type: {type}");
+            return null;
         }
     }
 
-    [SerializeField] Button nodeButton, moveUpB, moveDownB, DeleteB;
+    [SerializeField] Button nodeButton, moveUpB, moveDownB, DeleteB, copyB;
     public TMP_Text NodeName => nodeButton.GetComponentInChildren<TMP_Text>();
 
     static FishNode selectedNode;
@@ -124,6 +125,12 @@ public abstract class FishNode : MonoBehaviour
         DeleteB.BindSingleAction(() =>
         {
             FishMapper.DeleteNode(this);
+        });
+        copyB.BindSingleAction(() =>
+        {
+            FishNode t = FishMapper.SpawnNodeFromPrefab(this);
+            t.baseData = baseData.Copy();
+            t.SelectNode();
         });
     }
 

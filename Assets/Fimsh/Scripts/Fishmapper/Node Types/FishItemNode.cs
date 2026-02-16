@@ -58,6 +58,23 @@ public class FishItemNode : FishNode
             }
         }
 
+        public override FishRunData Copy()
+        {
+            return new FishItemRunData
+            {
+                runSeperately = this.runSeperately,
+                nodeType = FishNodeType.FishItem,
+                action = action,
+                order = order,
+                addedPostDelay = addedPostDelay,
+                delayBetweenSpawns = delayBetweenSpawns,
+                endX = endX,
+                fishLerpDuration = fishLerpDuration,
+                repeats = repeats,
+                startX = startX,
+            };
+        }
+
         public override int FishValue =>
             action == FishNodeAction.SpawnFish ? repeats : 0;
     }

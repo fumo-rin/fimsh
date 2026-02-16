@@ -48,7 +48,6 @@ namespace RinCore
             {
                 if (Instance is GeneralManager g && g.gameObject != null && g.gameObject.activeInHierarchy)
                 {
-                    Debug.Log(packet.position);
                     g.Explosion3D.EmitSingleCached(packet.position, null, 0f, null, packet.scale);
                     if (packet.playSound) g.funnyExplosionSound.Play(packet.position);
                 }

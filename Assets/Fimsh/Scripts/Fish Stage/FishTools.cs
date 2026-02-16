@@ -74,6 +74,28 @@ public class FishTools : MonoBehaviour
             yield return data.addedPostDelay.WaitForSeconds();
         }
     }
+    public struct spawnAndMovePacket
+    {
+        public float x01Start, x01End, fishLifetime;
+        public bool runSeperately;
+    }
+    public static void SpawnAndMoveItem(GameObject fish, spawnAndMovePacket packet)
+    {
+        StageRoutines.StartRoutine(StageSpawn, CO_Run(), false);
+        GameObject SpawnFish(float x)
+        {
+            FishSpace.Map(0f, x, out Vector3 startX);
+            GameObject spawned = Instantiate(fish, startX, Quaternion.identity);
+            return spawned;
+        }
+        IEnumerator CO_Run()
+        {
+            GameObject spawned = SpawnFish(packet.x01Start);
+            instance.spawnedObjects.Add(spawned);
+            FishSpace.Map(1f, packet.x01End, out Vector3 mappedEnd);
+            yield return MoveObject(spawned, mappedEnd, packet.fishLifetime);
+        }
+    }
     public static Coroutine MoveObject(GameObject fish, Vector3 end, float duration)
     {
         IEnumerator CO_Run()
@@ -124,7 +146,6 @@ public class FishTools : MonoBehaviour
             return null;
         }
         Debug.Log("Starting Stage with Nodes count : " + fishStage.Count);
-        Debug.Log(fishStage);
         StopStage();
         FishContinue.LastStage = fishStage;
         int totalFish = 0;

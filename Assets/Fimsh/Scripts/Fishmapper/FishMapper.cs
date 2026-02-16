@@ -120,7 +120,13 @@ public class FishMapper : MonoBehaviour
     }
 
     static bool MatchesType(FishNode prefab, FishNode.FishNodeType type) =>
-        type switch { FishNode.FishNodeType.FishItem => prefab is FishItemNode, _ => false };
+        type switch
+        {
+            FishNode.FishNodeType.FishItem => prefab is FishItemNode,
+            FishNode.FishNodeType.MusicNode => prefab is FishMusicNode,
+            FishNode.FishNodeType.HazardSpammer => prefab is HazardSpammerNode,
+            _ => false
+        };
 
     #endregion
 

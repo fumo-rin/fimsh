@@ -4,7 +4,145 @@ using UnityEngine;
 using System;
 using System.Security.Cryptography;
 using System.Text;
+#if UNITY_EDITOR
+using UnityEditor;
+public class PersistentJSONViewer : EditorWindow
+{
+    private string inputJson = "";
+    private string decryptedJson = "";
+    private Vector2 scrollPosInput;
+    private Vector2 scrollPosOutput;
 
+    [MenuItem("Fumorin/Json Decoder & Viewer")]
+    public static void OpenWindow()
+    {
+        PersistentJSONViewer window = GetWindow<PersistentJSONViewer>("PersistentJSON Viewer");
+        window.minSize = new Vector2(600, 400);
+        window.Show();
+    }
+
+    private void OnGUI()
+    {
+        GUILayout.Label("PersistentJSON Viewer & Decryptor", EditorStyles.boldLabel);
+
+        EditorGUILayout.Space();
+
+        GUILayout.Label("Input JSON (encrypted or plain):");
+        scrollPosInput = EditorGUILayout.BeginScrollView(scrollPosInput, GUILayout.Height(120));
+        inputJson = EditorGUILayout.TextArea(inputJson, GUILayout.ExpandHeight(true));
+        EditorGUILayout.EndScrollView();
+
+        EditorGUILayout.Space();
+
+        if (GUILayout.Button("Decrypt & Format JSON"))
+        {
+            DecryptAndFormatJson();
+        }
+
+        EditorGUILayout.Space();
+
+        GUILayout.Label("Decrypted & Formatted JSON:");
+        scrollPosOutput = EditorGUILayout.BeginScrollView(scrollPosOutput, GUILayout.ExpandHeight(true));
+        EditorGUILayout.TextArea(decryptedJson, GUILayout.ExpandHeight(true));
+        EditorGUILayout.EndScrollView();
+
+        EditorGUILayout.Space();
+
+        if (!string.IsNullOrEmpty(decryptedJson))
+        {
+            if (GUILayout.Button("Copy Decrypted JSON to Clipboard"))
+            {
+                EditorGUIUtility.systemCopyBuffer = decryptedJson;
+                Debug.Log("[PersistentJSONViewer] Decrypted JSON copied to clipboard.");
+            }
+        }
+    }
+    private void DecryptAndFormatJson()
+    {
+        if (string.IsNullOrEmpty(inputJson))
+        {
+            Debug.LogWarning("[PersistentJSONViewer] Input JSON is empty.");
+            decryptedJson = "";
+            return;
+        }
+
+        try
+        {
+            // Decrypt first (if encrypted)
+            string decrypted = inputJson.DecryptString();
+
+            // Format JSON reliably
+            decryptedJson = PrettyPrintJson(decrypted);
+
+            Debug.Log("[PersistentJSONViewer] Successfully decrypted & formatted JSON.");
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError("[PersistentJSONViewer] Failed to decrypt JSON: " + ex.Message);
+            decryptedJson = inputJson; // fallback: just show raw input
+        }
+    }
+
+    // Robust pretty printer for any JSON string
+    private string PrettyPrintJson(string json)
+    {
+        if (string.IsNullOrEmpty(json)) return "";
+
+        int indent = 0;
+        bool inQuotes = false;
+        System.Text.StringBuilder sb = new System.Text.StringBuilder();
+
+        for (int i = 0; i < json.Length; i++)
+        {
+            char c = json[i];
+
+            switch (c)
+            {
+                case '{':
+                case '[':
+                    sb.Append(c);
+                    if (!inQuotes)
+                    {
+                        sb.AppendLine();
+                        indent++;
+                        sb.Append(new string(' ', indent * 2));
+                    }
+                    break;
+                case '}':
+                case ']':
+                    if (!inQuotes)
+                    {
+                        sb.AppendLine();
+                        indent--;
+                        sb.Append(new string(' ', indent * 2));
+                    }
+                    sb.Append(c);
+                    break;
+                case ',':
+                    sb.Append(c);
+                    if (!inQuotes)
+                    {
+                        sb.AppendLine();
+                        sb.Append(new string(' ', indent * 2));
+                    }
+                    break;
+                case '"':
+                    sb.Append(c);
+                    // Ignore escaped quotes
+                    bool escaped = i > 0 && json[i - 1] == '\\';
+                    if (!escaped)
+                        inQuotes = !inQuotes;
+                    break;
+                default:
+                    sb.Append(c);
+                    break;
+            }
+        }
+
+        return sb.ToString();
+    }
+}
+#endif
 #region Parser Addon
 public static partial class PersistentJSON
 {
