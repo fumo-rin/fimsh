@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Fimsh/Scene/Main Menu.unity
+    guid: c071491277358cf41a7aaefd92959e49
+  - enabled: 1
+    path: Assets/Fimsh/Scene/Game Scene.unity
+    guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/Fimsh/Scene/Game UI Scene.unity
+    guid: 0d86ebd61aa13b24bbad9ee52777c5a4
+  - enabled: 1
+    path: Assets/Fimsh/Scene/UI Permanent.unity
+    guid: edc1aef08908b3d41b1ac0d110700897
+  - enabled: 1
+    path: Assets/Fimsh/Scene/Fish Mapper.unity
+    guid: ce4f60ccc3f012e47ae58b080c4fc262
+  - enabled: 1
+    path: Assets/Fimsh/Scene/Level Selector.unity
+    guid: b9c79fb161917244a932d70d06bd6be0
+  - enabled: 1
+    path: Assets/Fimsh/Scene/Deco Scene.unity
+    guid: 13795c854686c3348942d45adb7dbb9d
+  m_configObjects:
+    com.unity.addressableassets: {fileID: 11400000, guid: e69071b6dd579644aa83ed87f5ea66c0, type: 2}
+    com.unity.input.settings: {fileID: 11400000, guid: a3c04f13e89c6a94290a5d17650f3b63, type: 2}
+    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  m_UseUCBPForAssetBundles: 0

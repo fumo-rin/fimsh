@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 8118462c6b45ae54288814f50e5e749f
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 153826
+  packageName: Poseidon - Low Poly Water System
+  packageVersion: 1.9.3.4
+  assetPath: Assets/PinwheelStudio/Poseidon - Low Poly Water System/Runtime/Shaders/CGIncludes/PCore.cginc
+  uploadId: 857992

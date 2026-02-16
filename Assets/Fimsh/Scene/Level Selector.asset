@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89470abe1f8faed45aee038125f67f9d, type: 3}
+  m_Name: Level Selector
+  m_EditorClassIdentifier: rinCore::RinCore.ScenePairSO
+  mainScene:
+    sceneAsset: {fileID: 102900000, guid: b9c79fb161917244a932d70d06bd6be0, type: 3}
+    scenePath: Assets/Fimsh/Scene/Level Selector.unity
+  additiveScenes:
+  - sceneAsset: {fileID: 102900000, guid: edc1aef08908b3d41b1ac0d110700897, type: 3}
+    scenePath: Assets/Fimsh/Scene/UI Permanent.unity
+  - sceneAsset: {fileID: 102900000, guid: 13795c854686c3348942d45adb7dbb9d, type: 3}
+    scenePath: Assets/Fimsh/Scene/Deco Scene.unity

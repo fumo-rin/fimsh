@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 07e8bd8cb6d801b4bb2ffdc8d611e231
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 153826
+  packageName: Poseidon - Low Poly Water System
+  packageVersion: 1.9.3.4
+  assetPath: Assets/PinwheelStudio/Poseidon - Low Poly Water System/Runtime/Shaders/CGIncludes/PReflection.cginc
+  uploadId: 857992

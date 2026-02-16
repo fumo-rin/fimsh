@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 23475789bc4dd9a469f00e9707d60d63
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 153826
+  packageName: Poseidon - Low Poly Water System
+  packageVersion: 1.9.3.4
+  assetPath: Assets/PinwheelStudio/Poseidon - Low Poly Water System/Runtime/Scripts/Core/PWaterMeshType.cs
+  uploadId: 857992

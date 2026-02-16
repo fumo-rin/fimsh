@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 37dec5e07a1bac64d8c5bb87acf7a26e
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 153826
+  packageName: Poseidon - Low Poly Water System
+  packageVersion: 1.9.3.4
+  assetPath: Assets/PinwheelStudio/Poseidon - Low Poly Water System/Runtime/Shaders/BuiltinRP/WaterAdvancedBRP.shader
+  uploadId: 857992

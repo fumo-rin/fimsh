@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: aaa8f487ed9e01f4cafae89f58c53fd5
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 153826
+  packageName: Poseidon - Low Poly Water System
+  packageVersion: 1.9.3.4
+  assetPath: Assets/PinwheelStudio/Poseidon - Low Poly Water System/Runtime/Shaders/UniversalRP/WaterBasicURP.shader
+  uploadId: 857992
