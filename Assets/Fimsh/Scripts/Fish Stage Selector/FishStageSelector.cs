@@ -241,7 +241,7 @@ public class FishStageSelector : MonoBehaviour
     }
     void SelectLevel(string s)
     {
-        if (!s.TryFromJson(out List<FishNode.FishRunData> stage))
+        if (!s.TryFromJson(out List<FishNode.FishRunDataDTO> stage, false))
         {
             Debug.LogError("Invalid Level : " + s.DecryptString());
             return;

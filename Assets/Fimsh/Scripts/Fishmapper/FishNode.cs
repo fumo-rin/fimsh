@@ -1,127 +1,151 @@
 using RinCore;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public abstract class FishNode : MonoBehaviour
 {
-    [System.Serializable]
-    public class FishRunData
+    #region Prop Builders
+    protected FishPropSlider MakeFloatSlider(FishProperties drawer, string title,
+        float value, float max, float min)
     {
-        public enum FishNodeAction
-        {
-            None,
-            SpawnFish,
-            Pipebomb,
-            Log,
-        }
-        public float addedPostDelay = 0f;
-        public float startX = 0.5f;
-        public float endX = 0.5f;
-        public float fishLerpDuration = 3.5f;
-        public int repeats = 3;
-        public float delayBetweenSpawns = 0.2f;
-        public FishNodeAction action = FishNodeAction.None;
+        var s = drawer.StartSlider();
+        s.SliderGet.SetValues(value, max, min);
+        s.SetTitle(title);
+        return s;
+    }
+
+    protected FishPropSlider MakeIntSlider(FishProperties drawer, string title,
+        int value, int max, int min)
+    {
+        var s = drawer.StartSlider();
+        s.SliderGet.SetValuesInt(value, max, min);
+        s.SetTitle(title);
+        return s;
+    }
+
+    protected void BindFloat(FishPropSlider slider, System.Action<float> setter)
+    {
+        float v = slider.SliderGet.value;
+        setter(v);
+        slider.SetValueText(v.ToString("F2"));
+    }
+
+    protected void BindInt(FishPropSlider slider, System.Action<int> setter)
+    {
+        int v = (int)slider.SliderGet.value;
+        setter(v);
+        slider.SetValueText(v.ToString("F0"));
+    }
+    #endregion
+
+    public enum FishNodeType
+    {
+        FishItem
+    }
+
+    [System.Serializable]
+    public abstract class FishRunData
+    {
+        public FishNodeType nodeType;
         public int order;
         public bool runSeperately;
-        public IEnumerator RunNode()
-        {
-            switch (action)
-            {
-                case FishNodeAction.None:
-                    yield break;
-                case FishNodeAction.SpawnFish:
-                    yield return FishTools.SpawnFishSequence(FishTools.GetItem("0"), this);
-                    yield break;
-                case FishNodeAction.Pipebomb:
-                    yield return FishTools.SpawnFishSequence(FishTools.GetItem("1"), this);
-                    yield break;
-                default:
-                    break;
-            }
-        }
-        public int FishValue => action == FishNodeAction.SpawnFish ? repeats : 0;
+
+        public abstract int FishValue { get; }
+        public abstract IEnumerator RunData();
     }
-    [SerializeField] Button nodeButton, moveUpB, moveDownB, CopyB, DeleteB;
+
+    [System.Serializable]
+    public class FishRunDataDTO
+    {
+        public FishNodeType nodeType;
+        public string jsonData;
+    }
+
+    public FishRunDataDTO ToDTO()
+    {
+        return new FishRunDataDTO
+        {
+            nodeType = baseData.nodeType,
+            jsonData = baseData.ToJson(true, true)
+        };
+    }
+
+    public static FishRunData FromDTO(FishRunDataDTO dto)
+    {
+        switch (dto.nodeType)
+        {
+            case FishNodeType.FishItem:
+                dto.jsonData.TryFromJson(out FishItemNode.FishItemRunData r, true);
+                return r;
+
+            default:
+                Debug.LogError($"Unsupported node type: {dto.nodeType}");
+                return null;
+        }
+    }
+
+    [SerializeField] Button nodeButton, moveUpB, moveDownB, DeleteB;
     public TMP_Text NodeName => nodeButton.GetComponentInChildren<TMP_Text>();
+
     static FishNode selectedNode;
-    public FishRunData fishData;
+    [SerializeReference]
+    public FishRunData baseData;
+
     public abstract string BuildNodeName();
-    public static IEnumerable<FishRunData> SnapshotNodes
+
+    public static IEnumerable<FishRunDataDTO> SnapshotNodes
     {
         get
         {
-            foreach (var item in FindObjectsByType<FishNode>(FindObjectsInactive.Exclude, FindObjectsSortMode.None)
-                .ToList())
+            foreach (var node in FindObjectsByType<FishNode>(
+                FindObjectsInactive.Exclude,
+                FindObjectsSortMode.None))
             {
-                {
-                    yield return item.fishData;
-                }
+                if (node.baseData != null)
+                    yield return node.ToDTO();
             }
         }
     }
-    public bool IsSelected => IsNodeSelected(this);
-    private static bool IsNodeSelected(FishNode n)
-    {
-        return selectedNode == n && n != null;
-    }
+
+    public bool IsSelected => selectedNode == this && this != null;
+
     private void Start()
     {
         nodeButton.BindSingleAction(SelectNode);
         moveUpB.BindSingleAction(() => FishMapper.MoveNodeUp(this));
         moveDownB.BindSingleAction(() => FishMapper.MoveNodeDown(this));
-        CopyB.BindSingleAction(() =>
-        {
-            FishMapper.StartNode(out FishNode n);
-            n.CopyNode(this);
-        });
         DeleteB.BindSingleAction(() =>
         {
             FishMapper.DeleteNode(this);
         });
     }
+
     private void Update()
     {
-        this.fishData.order = ((int)transform.localPosition.y.Multiply(100f));
+        if (baseData != null)
+            baseData.order = (int)(transform.localPosition.y * 100f);
     }
-    private void CopyNode(FishNode other)
-    {
-        fishData.endX = other.fishData.endX;
-        fishData.startX = other.fishData.startX;
-        fishData.fishLerpDuration = other.fishData.fishLerpDuration;
-        fishData.addedPostDelay = other.fishData.addedPostDelay;
-        fishData.action = other.fishData.action;
-        fishData.addedPostDelay = other.fishData.addedPostDelay;
-        fishData.delayBetweenSpawns = other.fishData.delayBetweenSpawns;
-        fishData.repeats = other.fishData.repeats;
-        fishData.runSeperately = other.fishData.runSeperately;
-        other.NodeName.text = other.BuildNodeName();
-    }
+
     private void OnDestroy()
     {
         nodeButton.RemoveAllClickActions();
         moveUpB.RemoveAllClickActions();
         moveDownB.RemoveAllClickActions();
-        CopyB.RemoveAllClickActions();
         DeleteB.RemoveAllClickActions();
     }
+
     void SelectNode()
     {
-        UnselectNode();
+        if (selectedNode != null && selectedNode.nodeButton != null)
+            selectedNode.nodeButton.image.color = ColorHelper.White;
+
         selectedNode = this;
         FishProperties.DrawItem(this);
-        selectedNode.nodeButton.image.color = ColorHelper.PastelGreen;
+        nodeButton.image.color = ColorHelper.PastelGreen;
     }
-    static void UnselectNode()
-    {
-        if (selectedNode is FishNode f && f != null && f.gameObject != null)
-        {
-            f.nodeButton.image.color = ColorHelper.White;
-        }
-        selectedNode = null;
-    }
+
     public abstract IEnumerator DrawNode(FishProperties propDrawer);
 }

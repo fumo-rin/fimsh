@@ -34,7 +34,7 @@ public class FishTools : MonoBehaviour
             iteration++;
         }
     }
-    public static IEnumerator SpawnFishSequence(GameObject fish, FishNode.FishRunData data)
+    public static IEnumerator SpawnFishSequence(GameObject fish, FishItemNode.FishItemRunData data)
     {
         if (!data.runSeperately)
         {
@@ -101,14 +101,25 @@ public class FishTools : MonoBehaviour
     }
     static Coroutine runningStage = null;
 
+    public static Coroutine StartStage(List<FishNode.FishRunDataDTO> dto, DialogueStackSO stack = null)
+    {
+        List<FishNode.FishRunData> compiled = new();
+        foreach (var item in dto)
+        {
+            if (FishNode.FromDTO(item) is FishNode.FishRunData data)
+                compiled.Add(data);
+        }
+        return StartStage(compiled);
+    }
     public static Coroutine StartStage(List<FishNode.FishRunData> fishStage, DialogueStackSO stack = null)
     {
-        Debug.Log("Starting Stage with Nodes count : " + fishStage.Count);
         if (instance is not FishTools f)
         {
             Debug.LogError("Missing Fish Tools instance");
             return null;
         }
+        Debug.Log("Starting Stage with Nodes count : " + fishStage.Count);
+        Debug.Log(fishStage);
         StopStage();
         FishContinue.LastStage = fishStage;
         int totalFish = 0;
@@ -127,7 +138,7 @@ public class FishTools : MonoBehaviour
             FishCounter.StartSession(totalFish, out WaitUntil w);
             foreach (var item in fishStage.OrderByDescending(x => x.order))
             {
-                yield return item.RunNode();
+                yield return item.RunData();
             }
             yield return w;
             FishCounter.StopSession(FishCounter.FishSessionEnd.CatchAll);

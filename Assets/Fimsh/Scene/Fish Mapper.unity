@@ -5833,7 +5833,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55f07e553f994734faf0e2ca2b175c7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FishMapper
-  prefab: {fileID: 1153530976}
   nodeNest: {fileID: 1470933775}
   nodeSpawner: {fileID: 292877134}
   nodePrefabs:
@@ -6043,18 +6042,14 @@ MonoBehaviour:
   nodeButton: {fileID: 1336899161}
   moveUpB: {fileID: 1311734906}
   moveDownB: {fileID: 812699352}
-  CopyB: {fileID: 2141310363}
   DeleteB: {fileID: 2032411062}
-  fishData:
-    addedPostDelay: 0
-    startX: 0.5
-    endX: 0.5
-    fishLerpDuration: 3.5
-    repeats: 1
-    delayBetweenSpawns: 0.35
-    action: 1
-    order: 0
-    runSeperately: 0
+  baseData:
+    rid: -2
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
 --- !u!1 &1306756894
 GameObject:
   m_ObjectHideFlags: 0
@@ -9419,7 +9414,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2141310362
 RectTransform:
   m_ObjectHideFlags: 0

@@ -1,42 +1,40 @@
 using RinCore;
-using System.Collections;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class FishMapperTools : MonoBehaviour
 {
     [SerializeField] Button startButton, importButton, exportButton;
+
     private void Start()
     {
-        startButton.BindSingleAction(() => StartFishmapperStage());
-        importButton.BindSingleAction(() => FishMapper.Import());
-        exportButton.BindSingleAction(() =>
-        {
-            foreach (var item in FishNode.SnapshotNodes)
-            {
-
-            }
-            FishMapper.Export(out _, out _);
-        });
+        startButton.BindSingleAction(StartFishmapperStage);
+        importButton.BindSingleAction(FishMapper.Import);
+        exportButton.BindSingleAction(() => FishMapper.Export(out _, out _));
     }
+
+    [Serializable]
+    private class DTOListWrapper
+    {
+        public List<FishNode.FishRunDataDTO> list;
+    }
+
     public static void StartStage(string stageString)
     {
-        if (stageString.TryFromJson(out List<FishNode.FishRunData> result))
-        {
-            FishTools.StartStage(result);
-        }
-        else
-        {
-            Debug.LogError("Failed To Load Stage");
-        }
+        if (string.IsNullOrEmpty(stageString)) return;
+        stageString.TryFromJson(out DTOListWrapper wrapper, true);
+        if (wrapper?.list == null) { Debug.LogError("Failed To Load Stage"); return; }
+        FishTools.StartStage(wrapper.list);
     }
+
     public static void StartFishmapperStage()
     {
         FishMapper.Export(out _, out string json);
         StartStage(json);
     }
+
     private void OnDestroy()
     {
         startButton.RemoveAllClickActions();
