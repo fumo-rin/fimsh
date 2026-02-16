@@ -149,7 +149,7 @@ public class FishTools : MonoBehaviour
         StopStage();
         FishContinue.LastStage = fishStage;
         int totalFish = 0;
-        foreach (var item in fishStage)
+        foreach (var item in fishStage.Where(x => x.IsActive))
         {
             totalFish += item.FishValue;
         }
@@ -162,7 +162,7 @@ public class FishTools : MonoBehaviour
                 yield return dialogueWait;
             }
             FishCounter.StartSession(totalFish, out WaitUntil w);
-            foreach (var item in fishStage.OrderByDescending(x => x.order))
+            foreach (var item in fishStage.Where(x => x.IsActive).OrderByDescending(x => x.order))
             {
                 yield return item.RunData();
             }

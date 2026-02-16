@@ -40,7 +40,6 @@ public abstract class FishNode : MonoBehaviour
         slider.SetValueText(v.ToString("F0"));
     }
     #endregion
-
     public enum FishNodeType
     {
         FishItem,
@@ -54,6 +53,7 @@ public abstract class FishNode : MonoBehaviour
         public FishNodeType nodeType;
         public int order;
         public bool runSeperately;
+        public bool IsActive = true;
 
         public abstract int FishValue { get; }
         public abstract IEnumerator RunData();
@@ -92,7 +92,7 @@ public abstract class FishNode : MonoBehaviour
         }
     }
 
-    [SerializeField] Button nodeButton, moveUpB, moveDownB, DeleteB, copyB;
+    [SerializeField] Button nodeButton, moveUpB, moveDownB, DeleteB, copyB, toggleButton;
     public TMP_Text NodeName => nodeButton.GetComponentInChildren<TMP_Text>();
 
     static FishNode selectedNode;
@@ -132,22 +132,35 @@ public abstract class FishNode : MonoBehaviour
             t.baseData = baseData.Copy();
             t.SelectNode();
         });
+        toggleButton.BindSingleAction(TogglePress);
     }
-
     private void Update()
     {
         if (baseData != null)
             baseData.order = (int)(transform.localPosition.y * 100f);
-    }
 
+    }
+    public void SetActiveState(bool state)
+    {
+        baseData.IsActive = state;
+        if (nodeButton.GetComponentInChildren<TMP_Text>() is TMP_Text t)
+        {
+            t.color = baseData.IsActive ? ColorHelper.PastelPurple : ColorHelper.Gray6;
+        }
+
+    }
     private void OnDestroy()
     {
         nodeButton.RemoveAllClickActions();
         moveUpB.RemoveAllClickActions();
         moveDownB.RemoveAllClickActions();
         DeleteB.RemoveAllClickActions();
+        toggleButton.RemoveAllClickActions();
     }
-
+    void TogglePress()
+    {
+        SetActiveState(!baseData.IsActive);
+    }
     void SelectNode()
     {
         if (selectedNode != null && selectedNode.nodeButton != null)

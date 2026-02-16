@@ -47,7 +47,6 @@ public class FishMusicNode : FishNode
         {
             nodeType = FishNodeType.MusicNode;
         }
-
         public override IEnumerator RunData()
         {
             FishTools.GetMusic((int)action).Play();

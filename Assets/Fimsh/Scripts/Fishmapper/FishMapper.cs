@@ -57,6 +57,7 @@ public class FishMapper : MonoBehaviour
         instance.spawnedObjects.Add(n);
         if (n.baseData != null) n.baseData.order = (int)(n.transform.localPosition.y * 100f);
         n.NodeName.text = n.BuildNodeName();
+        n.SetActiveState(true);
         return n;
     }
 

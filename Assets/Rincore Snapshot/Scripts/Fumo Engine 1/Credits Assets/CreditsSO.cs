@@ -13,7 +13,7 @@ namespace RinCore
         {
             CreditsSO asset = (CreditsSO)ScriptableObject.CreateInstance(typeof(CreditsSO));
             asset.Title = title;
-            asset.Credit = credit;
+            asset.username = credit;
             asset.Website = website;
             asset.Priority = priority;
 
@@ -34,7 +34,7 @@ namespace RinCore
     {
         public int Priority = 0;
         public string Title = "";
-        public string Credit = "";
+        public string username = "";
         public string Website = "";
         public override string ToString()
         {
@@ -43,7 +43,7 @@ namespace RinCore
             {
                 creditText += Title.Capitalized() + " by ";
             }
-            creditText += Credit.Capitalized() + "##".ReplaceLineBreaks("##");
+            creditText += username + "##".ReplaceLineBreaks("##");
             if (!string.IsNullOrWhiteSpace(Website))
             {
                 creditText += Website.Capitalized() + "####".ReplaceLineBreaks("##");

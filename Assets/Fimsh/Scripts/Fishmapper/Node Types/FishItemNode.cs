@@ -37,11 +37,12 @@ public class FishItemNode : FishNode
         public float fishLerpDuration = 3.5f;
         public int repeats = 3;
         public float delayBetweenSpawns = 0.2f;
-        public FishNodeAction action = FishNodeAction.None;
+        public FishNodeAction action = FishNodeAction.SpawnFish;
 
         public FishItemRunData()
         {
             nodeType = FishNodeType.FishItem;
+            action = FishNodeAction.SpawnFish;
         }
 
         public override IEnumerator RunData()
@@ -54,6 +55,9 @@ public class FishItemNode : FishNode
 
                 case FishNodeAction.Pipebomb:
                     yield return FishTools.SpawnFishSequence(FishTools.GetItem("1"), this);
+                    break;
+                default:
+                    yield return addedPostDelay.WaitForSeconds();
                     break;
             }
         }

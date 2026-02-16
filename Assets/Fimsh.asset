@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: rinCore::RinCore.CreditsSO
   Priority: -24
   Title: 
-  Credit: Mollyco
+  username: Mollyco
   Website: 
 --- !u!114 &11400000
 MonoBehaviour:
@@ -31,12 +31,29 @@ MonoBehaviour:
   gameName: 
   gameCreator: fumo rin
   credits:
+  - {fileID: 3165706966511338840}
   - {fileID: 7767395331461330098}
   - {fileID: 7164616573833133073}
   - {fileID: -6101347193781703986}
   showTitle: 1
   doubleSpacing: 0
   spacingOverride: 
+--- !u!114 &3165706966511338840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab15c5f82e869144a8b0664a90e848eb, type: 3}
+  m_Name: ' : Cinnamon'
+  m_EditorClassIdentifier: rinCore::RinCore.CreditsSO
+  Priority: 0
+  Title: 
+  username: upside down cinnamon
+  Website: 
 --- !u!114 &7164616573833133073
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -51,7 +68,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: rinCore::RinCore.CreditsSO
   Priority: -24
   Title: 
-  Credit: kit133
+  username: Kit133
   Website: 
 --- !u!114 &7767395331461330098
 MonoBehaviour:
@@ -67,5 +84,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: rinCore::RinCore.CreditsSO
   Priority: -24
   Title: 
-  Credit: naro
+  username: Naro
   Website: 

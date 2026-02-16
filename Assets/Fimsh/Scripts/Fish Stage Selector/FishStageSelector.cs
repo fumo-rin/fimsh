@@ -205,7 +205,7 @@ public class FishStageSelector : MonoBehaviour
                         .ToArray();
                     string actString = ((((index % actFolders.Length) + actFolders.Length) % actFolders.Length) + 1).ToString();
                     GetLevelName(index, iteration, out string levelName);
-                    t.text = $"{(actString)}-{iteration + 1} - {levelName}";
+                    t.text = $"{(actString)}-{iteration + 1} {levelName}";
                 }
                 int currentLevel = iteration;
                 b.BindSingleAction(() => FindAndStartLevel(index, currentLevel));
@@ -233,7 +233,7 @@ public class FishStageSelector : MonoBehaviour
     {
         if (!GetLevel(act, level, out string levelString))
         {
-            Debug.LogError($"Invalid Level : Act {act} - Level {level}");
+            Debug.LogError($"Invalid Level : Act {act} Level {level}");
             return;
         }
         Debug.Log($"Finding Level : {act + 1}-{level + 1}...");
