@@ -185,6 +185,7 @@ public class FishStageSelector : MonoBehaviour
     [SerializeField] Button LevelSelectButton;
     [SerializeField] Transform createdItemsAnchor;
     [SerializeField] ScenePairSO gameScene;
+    [SerializeField] Button actUp, actDown;
     HashSet<GameObject> createdItems = new();
     #region Level Selector
     public void SelectAct(int index)
@@ -294,6 +295,16 @@ public class FishStageSelector : MonoBehaviour
         }
         lastInput = input;
     }
+    private void SelectUp()
+    {
+        CurrentActSelection += 1;
+        SelectAct(CurrentActSelection);
+    }
+    private void SelectDown()
+    {
+        CurrentActSelection -= 1;
+        SelectAct(CurrentActSelection);
+    }
     private void Start()
     {
         IEnumerator CO_SelectAfterLoading()
@@ -302,5 +313,12 @@ public class FishStageSelector : MonoBehaviour
             SelectAct(CurrentActSelection);
         }
         StartCoroutine(CO_SelectAfterLoading());
+        actUp.BindSingleAction(SelectUp);
+        actDown.BindSingleAction(SelectDown);
+    }
+    private void OnDestroy()
+    {
+        actUp.RemoveAllClickActions();
+        actDown.RemoveAllClickActions();
     }
 }

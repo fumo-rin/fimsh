@@ -63,8 +63,8 @@ public class FishTools : MonoBehaviour
             {
                 bool notLast = i < data.repeats - 1;
                 float lerp = (data.repeats == 1) ? 0f : (float)i / (data.repeats - 1);
-                float startX = data.xStart.LerpUnclamped(data.xEnd, lerp);
-                float targetX = data.xStart.LerpUnclamped(data.xEnd, lerp);
+                float startX = data.startX.LerpUnclamped(data.endX, lerp);
+                float targetX = data.startX.LerpUnclamped(data.endX, lerp);
                 GameObject spawned = SpawnFish(startX);
                 instance.spawnedObjects.Add(spawned);
                 FishSpace.Map(1f, targetX, out Vector3 mappedEnd);

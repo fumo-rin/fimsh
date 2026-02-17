@@ -17,7 +17,7 @@ public class FishItemNode : FishNode
     public override string BuildNodeName()
     {
         return $"{fishData.action.ToSpacedString().WordChop(2)}: " +
-               $"{fishData.repeats}x({fishData.xStart * 100f:F0}-{fishData.xEnd * 100f:F0})";
+               $"{fishData.repeats}x({fishData.startX * 100f:F0}-{fishData.endX * 100f:F0})";
     }
 
     [System.Serializable]
@@ -32,8 +32,8 @@ public class FishItemNode : FishNode
         }
 
         public float addedPostDelay = 0f;
-        public float xStart = 0.5f;
-        public float xEnd = 0.5f;
+        public float startX = 0.5f;
+        public float endX = 0.5f;
         public float fishLerpDuration = 3.5f;
         public int repeats = 3;
         public float delayBetweenSpawns = 0.2f;
@@ -72,10 +72,10 @@ public class FishItemNode : FishNode
                 order = order,
                 addedPostDelay = addedPostDelay,
                 delayBetweenSpawns = delayBetweenSpawns,
-                xEnd = xEnd,
+                endX = endX,
                 fishLerpDuration = fishLerpDuration,
                 repeats = repeats,
-                xStart = xStart,
+                startX = startX,
             };
         }
 
@@ -86,8 +86,8 @@ public class FishItemNode : FishNode
     public override IEnumerator DrawNode(FishProperties propDrawer)
     {
         var addedDelaySlider = MakeFloatSlider(propDrawer, "Added Post Delay", fishData.addedPostDelay, 10f, 0f);
-        var startXSlider = MakeFloatSlider(propDrawer, "Start X", fishData.xStart, 1f, 0f);
-        var endXSlider = MakeFloatSlider(propDrawer, "End X", fishData.xEnd, 1f, 0f);
+        var startXSlider = MakeFloatSlider(propDrawer, "Start X", fishData.startX, 1f, 0f);
+        var endXSlider = MakeFloatSlider(propDrawer, "End X", fishData.endX, 1f, 0f);
         var fishLerpSlider = MakeFloatSlider(propDrawer, "Fish Duration", fishData.fishLerpDuration, 10f, 0.75f);
         var repeatCountSlider = MakeIntSlider(propDrawer, "Fish Spawn Count", fishData.repeats, 10, 1);
         var repeatDelaySlider = MakeFloatSlider(propDrawer, "Fish Repeat Spawn Delay", fishData.delayBetweenSpawns, 1.5f, 0.05f);
@@ -103,10 +103,10 @@ public class FishItemNode : FishNode
         var flipXButton = propDrawer.StartButton("Flip X", () => FlipX());
         void FlipX()
         {
-            fishData.xEnd = 1f - fishData.xEnd;
-            fishData.xStart = 1f - fishData.xStart;
-            startXSlider.SliderGet.SetValueWithoutNotify(fishData.xStart);
-            endXSlider.SliderGet.SetValueWithoutNotify(fishData.xEnd);
+            fishData.endX = 1f - fishData.endX;
+            fishData.startX = 1f - fishData.startX;
+            startXSlider.SliderGet.SetValueWithoutNotify(fishData.startX);
+            endXSlider.SliderGet.SetValueWithoutNotify(fishData.endX);
         }
 
         while (IsSelected)
@@ -118,8 +118,8 @@ public class FishItemNode : FishNode
                 continue;
             }
             BindFloat(addedDelaySlider, v => fishData.addedPostDelay = v);
-            BindFloat(startXSlider, v => fishData.xStart = v);
-            BindFloat(endXSlider, v => fishData.xEnd = v);
+            BindFloat(startXSlider, v => fishData.startX = v);
+            BindFloat(endXSlider, v => fishData.endX = v);
             BindFloat(fishLerpSlider, v => fishData.fishLerpDuration = v);
             BindInt(repeatCountSlider, v => fishData.repeats = v);
             BindFloat(repeatDelaySlider, v => fishData.delayBetweenSpawns = v);
