@@ -131,16 +131,15 @@ public class FishStageSelector : MonoBehaviour
 
         return true;
     }
-    public static bool GetLevel(int actIndex, int levelIndex, out string levelString)
+    public static bool GetLevel(int actIndex, int levelIndex, out string levelString, out string levelName)
     {
         levelString = null;
-
+        levelName = null;
         if (!Directory.Exists(ActsRoot))
         {
             Debug.LogWarning($"Acts directory not found: {ActsRoot}");
             return false;
         }
-
         string[] actFolders = Directory
             .GetDirectories(ActsRoot)
             .OrderBy(d => d)
@@ -151,11 +150,8 @@ public class FishStageSelector : MonoBehaviour
             Debug.LogWarning("No act folders found.");
             return false;
         }
-
         actIndex = ((actIndex % actFolders.Length) + actFolders.Length) % actFolders.Length;
-
         string selectedAct = actFolders[actIndex];
-
         string[] levelFiles = Directory
             .GetFiles(selectedAct, "*.txt")
             .OrderBy(f => f)
@@ -166,12 +162,21 @@ public class FishStageSelector : MonoBehaviour
             Debug.LogWarning($"No level files found in: {selectedAct}");
             return false;
         }
-
         levelIndex = ((levelIndex % levelFiles.Length) + levelFiles.Length) % levelFiles.Length;
-
         try
         {
-            levelString = File.ReadAllText(levelFiles[levelIndex]);
+            string fullPath = levelFiles[levelIndex];
+            levelString = File.ReadAllText(fullPath);
+            string fileName = Path.GetFileNameWithoutExtension(fullPath);
+            int dashIndex = fileName.IndexOf('-');
+            if (dashIndex >= 0 && dashIndex < fileName.Length - 1)
+            {
+                levelName = fileName.Substring(dashIndex + 1);
+            }
+            else
+            {
+                levelName = fileName;
+            }
             return true;
         }
         catch (IOException e)
@@ -232,7 +237,8 @@ public class FishStageSelector : MonoBehaviour
     }
     void FindAndStartLevel(int act, int level)
     {
-        if (!GetLevel(act, level, out string levelString))
+        string levelName = "";
+        if (!GetLevel(act, level, out string levelString, out levelName))
         {
             Debug.LogError($"Invalid Level : Act {act} Level {level}");
             return;
@@ -241,7 +247,9 @@ public class FishStageSelector : MonoBehaviour
         SelectLevel(levelString, new()
         {
             dialogueStack = null,
-            forceActivateNodes = true
+            forceActivateNodes = true,
+            displayLevelName = true,
+            levelName = levelName,
         });
     }
     void SelectLevel(string s, FishTools.stageSettings settings)

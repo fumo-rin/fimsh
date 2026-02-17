@@ -8,7 +8,7 @@ public class FishCounter : MonoBehaviour
     private static int FishRemaining = 0;
     private static int CurrentMaxFishCount;
     [SerializeField] Animator fishAnimator;
-    [SerializeField] TMP_Text fishText;
+    [SerializeField] TMP_Text fishText, levelText;
     [SerializeField] string catchFishAnimKey = "CATCHFISH";
     private void Awake()
     {
@@ -61,6 +61,19 @@ public class FishCounter : MonoBehaviour
     {
         if (fishText != null)
             fishText.text = text.ToString();
+    }
+    public static void SetLevelText(string text)
+    {
+        Debug.Log("Trying to set fishcounter level text");
+        if (instance is FishCounter f && f.gameObject != null && f.gameObject.activeInHierarchy)
+        {
+            Debug.Log("Bwuz");
+            f.levelText.text = text;
+        }
+        else
+        {
+            Debug.LogWarning("Failed to set fishcounter text");
+        }
     }
     public static void CatchFish()
     {

@@ -133,10 +133,14 @@ public class FishTools : MonoBehaviour
     {
         public DialogueStackSO dialogueStack;
         public bool forceActivateNodes;
+        public bool displayLevelName;
+        public string levelName;
         public stageSettings(bool forceActivateNodes)
         {
             dialogueStack = null;
             this.forceActivateNodes = forceActivateNodes;
+            this.displayLevelName = false;
+            this.levelName = "";
         }
     }
     public static bool IsStageRunning { get; private set; }
@@ -188,6 +192,10 @@ public class FishTools : MonoBehaviour
                 yield return dialogueWait;
             }
             FishCounter.StartSession(totalFish, out WaitUntil w);
+            if (settings.displayLevelName)
+            {
+                FishCounter.SetLevelText(settings.levelName);
+            }
             foreach (var item in stage)
             {
                 yield return item.RunData();
