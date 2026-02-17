@@ -11,6 +11,7 @@ public class FishProperties : MonoBehaviour
     [SerializeField] FishPropSlider propSlider;
     [SerializeField] FishEnumDropdown enumDropdown;
     [SerializeField] FishPropToggle propToggle;
+    [SerializeField] FishPropButton propButton;
     Coroutine drawRoutine;
     HashSet<GameObject> spawnedItems = new();
     void CleanUp()
@@ -33,6 +34,7 @@ public class FishProperties : MonoBehaviour
         propSlider.gameObject.SetActive(false);
         enumDropdown.gameObject.SetActive(false);
         propToggle.gameObject.SetActive(false);
+        propButton.gameObject.SetActive(false);
     }
     public static void DrawItem(FishNode item)
     {
@@ -71,6 +73,14 @@ public class FishProperties : MonoBehaviour
         FishPropToggle spawned = Instantiate(propToggle, propContainer);
         spawned.gameObject.SetActive(true);
         spawnedItems.Add(spawned.gameObject);
+        return spawned;
+    }
+    public FishPropButton StartButton(string propName, System.Action a)
+    {
+        FishPropButton spawned = Instantiate(propButton, propContainer);
+        spawned.gameObject.SetActive(true);
+        spawnedItems.Add(spawned.gameObject);
+        spawned.Bind(propName, a);
         return spawned;
     }
 }

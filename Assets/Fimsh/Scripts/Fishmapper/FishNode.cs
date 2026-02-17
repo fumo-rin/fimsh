@@ -44,7 +44,8 @@ public abstract class FishNode : MonoBehaviour
     {
         FishItem,
         MusicNode,
-        HazardSpammer
+        HazardSpammer,
+        PipeWall
     }
 
     [System.Serializable]
@@ -83,6 +84,7 @@ public abstract class FishNode : MonoBehaviour
             FishNodeType.FishItem => dto.jsonData.TryFromJson<FishItemNode.FishItemRunData>(out var fish, true) ? fish : null,
             FishNodeType.MusicNode => dto.jsonData.TryFromJson<FishMusicNode.FishMusicData>(out var music, true) ? music : null,
             FishNodeType.HazardSpammer => dto.jsonData.TryFromJson<HazardSpammerNode.HazardSpammerData>(out var hazard, true) ? hazard : null,
+            FishNodeType.PipeWall => dto.jsonData.TryFromJson<PipeWallNode.PipeBombWallData>(out var wall, true) ? wall : null,
             _ => ThrowUnsupportedNode(dto.nodeType)
         };
         FishRunData ThrowUnsupportedNode(FishNodeType type)

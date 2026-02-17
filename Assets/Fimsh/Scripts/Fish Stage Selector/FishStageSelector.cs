@@ -106,7 +106,7 @@ public class FishStageSelector : MonoBehaviour
         }
         actIndex = ((actIndex % actFolders.Length) + actFolders.Length) % actFolders.Length;
 
-        string selectedAct = actFolders[actIndex]; 
+        string selectedAct = actFolders[actIndex];
         cachedActName = Path.GetFileName(selectedAct);
 
         string[] levelFiles = Directory
@@ -205,7 +205,7 @@ public class FishStageSelector : MonoBehaviour
                         .ToArray();
                     string actString = ((((index % actFolders.Length) + actFolders.Length) % actFolders.Length) + 1).ToString();
                     GetLevelName(index, iteration, out string levelName);
-                    t.text = $"{(actString)}-{iteration + 1} {levelName}";
+                    t.text = $"{(actString)}-{iteration + 1}##{levelName}".ReplaceLineBreaks("##");
                 }
                 int currentLevel = iteration;
                 b.BindSingleAction(() => FindAndStartLevel(index, currentLevel));
@@ -237,17 +237,24 @@ public class FishStageSelector : MonoBehaviour
             return;
         }
         Debug.Log($"Finding Level : {act + 1}-{level + 1}...");
-        SelectLevel(levelString);
+        SelectLevel(levelString, new()
+        {
+            dialogueStack = null,
+            forceActivateNodes = true
+        });
     }
-    void SelectLevel(string s)
+    void SelectLevel(string s, FishTools.stageSettings settings)
     {
         if (!s.TryFromJson(out FishMapper.DTOListWrapper wrapper, true) || wrapper?.list == null)
         {
             Debug.LogError("Invalid Level: " + s.DecryptString());
             return;
         }
+        foreach (var item in wrapper.list)
+        {
 
-        SceneLoader.LoadScenePair(gameScene, () => FishTools.StartStage(wrapper.list));
+        }
+        SceneLoader.LoadScenePair(gameScene, () => FishTools.StartStage(wrapper.list, settings));
     }
     private void DestroyAll()
     {

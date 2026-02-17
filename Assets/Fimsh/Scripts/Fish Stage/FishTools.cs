@@ -15,6 +15,7 @@ public class FishTools : MonoBehaviour
     [SerializeField] List<MusicWrapper> musicPiece = new();
     HashSet<GameObject> spawnedObjects = new();
     public bool IsGameScene => gameScene.IsLastLoaded;
+    public static bool IsEditing => instance == null ? false : !instance.IsGameScene;
     [SerializeField] ScenePairSO gameScene, sceneSelect;
     public static void EndStage()
     {
@@ -62,8 +63,8 @@ public class FishTools : MonoBehaviour
             {
                 bool notLast = i < data.repeats - 1;
                 float lerp = (data.repeats == 1) ? 0f : (float)i / (data.repeats - 1);
-                float startX = data.startX.LerpUnclamped(data.endX, lerp);
-                float targetX = data.startX.LerpUnclamped(data.endX, lerp);
+                float startX = data.xStart.LerpUnclamped(data.xEnd, lerp);
+                float targetX = data.xStart.LerpUnclamped(data.xEnd, lerp);
                 GameObject spawned = SpawnFish(startX);
                 instance.spawnedObjects.Add(spawned);
                 FishSpace.Map(1f, targetX, out Vector3 mappedEnd);
@@ -128,7 +129,18 @@ public class FishTools : MonoBehaviour
     }
     static Coroutine runningStage = null;
 
-    public static Coroutine StartStage(List<FishNode.FishRunDataDTO> dto, DialogueStackSO stack = null)
+    public struct stageSettings
+    {
+        public DialogueStackSO dialogueStack;
+        public bool forceActivateNodes;
+        public stageSettings(bool forceActivateNodes)
+        {
+            dialogueStack = null;
+            this.forceActivateNodes = forceActivateNodes;
+        }
+    }
+    public static bool IsStageRunning { get; private set; }
+    public static Coroutine StartStage(List<FishNode.FishRunDataDTO> dto, stageSettings settings)
     {
         List<FishNode.FishRunData> compiled = new();
         foreach (var item in dto)
@@ -136,9 +148,9 @@ public class FishTools : MonoBehaviour
             if (FishNode.FromDTO(item) is FishNode.FishRunData data)
                 compiled.Add(data);
         }
-        return StartStage(compiled);
+        return StartStage(compiled, settings);
     }
-    public static Coroutine StartStage(List<FishNode.FishRunData> fishStage, DialogueStackSO stack = null)
+    public static Coroutine StartStage(List<FishNode.FishRunData> fishStage, stageSettings settings)
     {
         if (instance is not FishTools f)
         {
@@ -148,21 +160,35 @@ public class FishTools : MonoBehaviour
         Debug.Log("Starting Stage with Nodes count : " + fishStage.Count);
         StopStage();
         FishContinue.LastStage = fishStage;
+        IOrderedEnumerable<FishNode.FishRunData> stage;
+        if (settings.forceActivateNodes)
+        {
+            stage = fishStage.OrderByDescending(x => x.order);
+            foreach (var item in stage)
+            {
+                item.IsActive = true;
+            }
+        }
+        else
+        {
+            stage = fishStage.Where(x => x.IsActive).OrderByDescending(x => x.order); ;
+        }
         int totalFish = 0;
-        foreach (var item in fishStage.Where(x => x.IsActive))
+        foreach (var item in stage)
         {
             totalFish += item.FishValue;
         }
         IEnumerator StartStage()
         {
-            if (stack != null)
+            IsStageRunning = true;
+            if (settings.dialogueStack != null)
             {
                 yield return 0.15f.WaitForSeconds();
-                stack.StartDialogue(out WaitUntil dialogueWait, null);
+                settings.dialogueStack.StartDialogue(out WaitUntil dialogueWait, null);
                 yield return dialogueWait;
             }
             FishCounter.StartSession(totalFish, out WaitUntil w);
-            foreach (var item in fishStage.Where(x => x.IsActive).OrderByDescending(x => x.order))
+            foreach (var item in stage)
             {
                 yield return item.RunData();
             }
@@ -175,6 +201,7 @@ public class FishTools : MonoBehaviour
                 instance.sceneSelect.Load();
             }
             runningStage = null;
+            IsStageRunning = false;
         }
         runningStage = f.StartCoroutine(StartStage());
         return runningStage;
@@ -185,6 +212,7 @@ public class FishTools : MonoBehaviour
         {
             if (runningStage != null)
             {
+                IsStageRunning = false;
                 StageRoutines.StopRoutine(StageSpawn);
                 instance.StopCoroutine(runningStage);
                 foreach (var item in f.spawnedObjects.ToList())

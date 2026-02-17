@@ -1,5 +1,6 @@
 using RinCore;
 using System.Collections;
+using System.Xml;
 using UnityEngine;
 
 public class HazardSpammerNode : FishNode
@@ -31,8 +32,23 @@ public class HazardSpammerNode : FishNode
         typeDropdown.BindEnum(fishData.spawnItem);
         typeDropdown.SetTitle("Hazard Selection");
 
+        var flipXButton = propDrawer.StartButton("Flip X", () => FlipX());
+        void FlipX()
+        {
+            fishData.xEnd = 1f - fishData.xEnd;
+            fishData.xStart = 1f - fishData.xStart;
+            startXSlider.SliderGet.SetValueWithoutNotify(fishData.xStart);
+            endXSlider.SliderGet.SetValueWithoutNotify(fishData.xEnd);
+        }
+
         while (IsSelected)
         {
+            if (flipXButton.WasPressedThisFrame)
+            {
+                NodeName.text = BuildNodeName();
+                yield return null;
+                continue;
+            }
             BindFloat(durationSlider, v => fishData.duration = v);
             BindFloat(intervalSlider, v => fishData.interval = v);
             BindFloat(addedDelaySlider, v => fishData.addedPostDelay = v);

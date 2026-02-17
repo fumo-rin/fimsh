@@ -35,9 +35,12 @@ public class FishHazardItem : MonoBehaviour, IFibsh
     public bool TryCollect(FishPlayer p)
     {
         GeneralManager.FunnyExplosion(new(transform.position, true) { scale = 2f });
-        FishTools.StopStage();
-        FishContinue.Show(1f);
-        FishCounter.StopSession(FishCounter.FishSessionEnd.Hazard, $"{WithIndefiniteArticle(category.ToSpacedString())}");
+        if (!FishTools.IsEditing)
+        {
+            FishTools.StopStage();
+            FishContinue.Show(1f);
+            FishCounter.StopSession(FishCounter.FishSessionEnd.Hazard, $"{WithIndefiniteArticle(category.ToSpacedString())}");
+        }
         return true;
     }
 }

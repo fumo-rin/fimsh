@@ -4,6 +4,7 @@ using RinCore;
 using UnityEngine.UI;
 using System.Collections;
 using NUnit.Framework.Constraints;
+using System.Xml;
 public class FishContinue : MonoBehaviour
 {
     static FishContinue instance;
@@ -39,7 +40,7 @@ public class FishContinue : MonoBehaviour
             n.stageSelect.Load();
             return;
         }
-        FishTools.StartStage(LastStage);
+        FishTools.StartStage(LastStage, new(true));
         Hide();
     }
     public static void Show(float delay = 0f)

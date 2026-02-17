@@ -1,2 +1,2 @@
 fimsh=1.0.2
-Maximum Fishing Master, Rin=0.a1.7
+Maximum Fishing Master, Rin=0.a1.12

@@ -115,6 +115,7 @@ public class FishMapper : MonoBehaviour
             }
 
             var node = SpawnNodeFromPrefab(prefab);
+            data.IsActive = true;
             node.baseData = data;
             node.NodeName.text = node.BuildNodeName();
         }
@@ -126,6 +127,7 @@ public class FishMapper : MonoBehaviour
             FishNode.FishNodeType.FishItem => prefab is FishItemNode,
             FishNode.FishNodeType.MusicNode => prefab is FishMusicNode,
             FishNode.FishNodeType.HazardSpammer => prefab is HazardSpammerNode,
+            FishNode.FishNodeType.PipeWall => prefab is PipeWallNode,
             _ => false
         };
 
