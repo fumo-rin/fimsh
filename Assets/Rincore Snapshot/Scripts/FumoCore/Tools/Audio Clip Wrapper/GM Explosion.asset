@@ -19,7 +19,7 @@ MonoBehaviour:
   - clip: {fileID: 8300000, guid: 516d272f3bff7f84882c2f8ae549c2bc, type: 3}
     PitchVariancePercent: 6.3
     PitchOrigin: 1
-    Volume: 0.775
+    Volume: 0.592
     Muted: 0
   <singleChannel>k__BackingField: 1
   <singleRepeatLockoutTime>k__BackingField: 0.008333334

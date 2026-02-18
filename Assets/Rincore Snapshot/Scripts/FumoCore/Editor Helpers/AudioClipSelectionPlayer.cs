@@ -2,12 +2,28 @@ using UnityEngine;
 using UnityEditor;
 #if UNITY_EDITOR
 using System;
-using System.Reflection;
+using UnityEditor.ShortcutManagement;
 public static class AudioUtils
 {
+#if UNITY_EDITOR
+
+    public static class AudioEditorShortcuts
+    {
+        [Shortcut("Audio/Stop Preview Clip", KeyCode.Space)]
+        private static void StopPreviewClip()
+        {
+            if (AudioUtils.IsPlaying)
+            {
+                AudioUtils.Stop();
+            }
+        }
+    }
+#endif
     private static GameObject editorAudioObject;
     private static AudioSource audioSource;
+
     public static bool IsPlaying => audioSource != null && audioSource.isPlaying;
+
     public static void PlayClip(AudioClip clip)
     {
         if (clip == null)
@@ -34,21 +50,26 @@ public static class AudioUtils
 
         EditorApplication.update -= EditorUpdate;
         EditorApplication.update += EditorUpdate;
+
+        SceneView.duringSceneGui -= OnSceneGUI;
+        SceneView.duringSceneGui += OnSceneGUI;
     }
+
     public static void Stop()
     {
         if (audioSource == null)
-        {
             return;
-        }
+
         if (audioSource.isPlaying)
             audioSource.Stop();
     }
+
     private static void EditorUpdate()
     {
         if (audioSource == null || !audioSource.isPlaying)
         {
             EditorApplication.update -= EditorUpdate;
+            SceneView.duringSceneGui -= OnSceneGUI;
 
             if (editorAudioObject != null)
             {
@@ -58,8 +79,20 @@ public static class AudioUtils
             }
         }
     }
+
+    private static void OnSceneGUI(SceneView sceneView)
+    {
+        Event e = Event.current;
+
+        if (e.type == EventType.KeyDown && e.keyCode == KeyCode.Space)
+        {
+            Stop();
+            e.Use();
+        }
+    }
 }
 #endif
+
 namespace RinCore
 {
 #if UNITY_EDITOR
@@ -73,11 +106,11 @@ namespace RinCore
                 if (Selection.activeObject is AudioClip clip)
                 {
                     AudioUtils.PlayClip(clip);
-                    Debug.Log($"Playing clip: {clip.name}");
                 }
                 else
                 {
-                    if (AudioUtils.IsPlaying) AudioUtils.Stop();
+                    if (AudioUtils.IsPlaying)
+                        AudioUtils.Stop();
                 }
             };
         }

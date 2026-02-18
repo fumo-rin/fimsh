@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Catch Sound
   m_EditorClassIdentifier: rinCore::RinCore.ACWrapper
   SoundName: Catch Sound
-  soundVolume: 0.74
+  soundVolume: 0.657
   audioMixerOverride: {fileID: -1549346045928506887, guid: 2d90163c4095a0a4283cc9766c8294e4, type: 2}
   <soundClips>k__BackingField:
   - clip: {fileID: 8300000, guid: 396a6d211045267428c078e034886eaa, type: 3}

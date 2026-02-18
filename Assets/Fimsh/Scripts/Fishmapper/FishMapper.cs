@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class FishMapper : MonoBehaviour
@@ -11,6 +12,8 @@ public class FishMapper : MonoBehaviour
     [SerializeField] Transform nodeNest;
     [SerializeField] TMP_Dropdown nodeSpawner;
     [SerializeField] List<FishNode> nodePrefabs;
+    [SerializeField] InputActionReference alternateKey;
+    public static bool IsAlternateKeyPressed => instance != null && instance.alternateKey.IsPressed();
 
     static FishMapper instance;
     HashSet<FishNode> spawnedObjects = new();
@@ -19,6 +22,7 @@ public class FishMapper : MonoBehaviour
 
     void Start()
     {
+        _ = IsAlternateKeyPressed;
         SetupDropdown();
         foreach (var item in nodePrefabs)
             item.gameObject.SetActive(false);
@@ -152,16 +156,29 @@ public class FishMapper : MonoBehaviour
     {
         if (!IsValidNode(node)) return;
         int index = node.transform.GetSiblingIndex();
-        if (index > 0) node.transform.SetSiblingIndex(index - 1);
+        if (IsAlternateKeyPressed)
+        {
+            node.transform.SetSiblingIndex(0);
+        }
+        else
+        {
+            if (index > 0) node.transform.SetSiblingIndex(index - 1);
+        }
         if (node.baseData != null) node.baseData.order = (int)(node.transform.localPosition.y * 100f);
     }
-
     public static void MoveNodeDown(FishNode node)
     {
         if (!IsValidNode(node)) return;
         int index = node.transform.GetSiblingIndex();
         int maxIndex = node.transform.parent.childCount - 1;
-        if (index < maxIndex) node.transform.SetSiblingIndex(index + 1);
+        if (IsAlternateKeyPressed)
+        {
+            node.transform.SetSiblingIndex(maxIndex);
+        }
+        else
+        {
+            if (index < maxIndex) node.transform.SetSiblingIndex(index + 1);
+        }
         if (node.baseData != null) node.baseData.order = (int)(node.transform.localPosition.y * 100f);
     }
 
