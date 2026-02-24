@@ -1,8 +1,10 @@
 using RinCore;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.InputSystem;
 public class FishTools : MonoBehaviour
 {
     static FishTools instance;
@@ -14,6 +16,8 @@ public class FishTools : MonoBehaviour
     [SerializeField] List<GameObject> prefabs = new();
     [SerializeField] List<MusicWrapper> musicPiece = new();
     HashSet<GameObject> spawnedObjects = new();
+    [SerializeField] InputActionReference menuKey;
+    [SerializeField] ScenePairSO menuScene;
     public bool IsGameScene => gameScene.IsLastLoaded;
     public static bool IsEditing => instance == null ? false : !instance.IsGameScene;
     [SerializeField] ScenePairSO gameScene, sceneSelect;
@@ -38,6 +42,17 @@ public class FishTools : MonoBehaviour
             }
             lookup[iteration.ToString()] = item;
             iteration++;
+        }
+    }
+    private void LateUpdate()
+    {
+        if (menuKey.JustPressed() && !IsEditing)
+        {
+            StopStage();
+            StopAllCoroutines();
+            StageRoutines.StopAll();
+            GlobalCoroutineRunner.StopAll();
+            menuScene.Load();
         }
     }
     public static IEnumerator SpawnFishSequence(GameObject fish, FishItemNode.FishItemRunData data)
@@ -116,14 +131,31 @@ public class FishTools : MonoBehaviour
             {
                 Destroy(fish);
                 instance.spawnedObjects.Remove(fish);
-                StopStage();
-                FishContinue.Hide();
-                FishCounter.StopSession(FishCounter.FishSessionEnd.MissCatch);
-                yield return 0.45f.WaitForSeconds();
-                FishContinue.Show();
+
+                switch (FishTools.ActiveStageSettings.gamemode)
+                {
+                    case stageSettings.Gamemode.StageSelect:
+                        StopStage();
+                        FishContinue.Hide();
+                        FishCounter.StopSession(FishCounter.FishSessionEnd.MissCatch);
+                        yield return 0.45f.WaitForSeconds();
+                        FishContinue.Show();
+                        break;
+                    case stageSettings.Gamemode.Arcade:
+                        FishCounter.CatchFish(0);
+                        break;
+                    default:
+                        break;
+                }
             }
-            Destroy(fish);
-            instance.spawnedObjects.Remove(fish);
+            else
+            {
+                if (fish != null && fish.gameObject != null)
+                {
+                    Destroy(fish);
+                    instance.spawnedObjects.Remove(fish);
+                }
+            }
         }
         return StageRoutines.StartRoutine("fish walk", CO_Run(), false);
     }
@@ -133,17 +165,89 @@ public class FishTools : MonoBehaviour
     {
         public DialogueStackSO dialogueStack;
         public bool forceActivateNodes;
-        public bool displayLevelName;
+        public bool shouldDisplayLevelName;
         public string levelName;
+        [System.Flags]
+        public enum Gamemode
+        {
+            StageSelect,
+            Arcade
+        }
+        public Gamemode gamemode;
+        public int BombPointLoss;
         public stageSettings(bool forceActivateNodes)
         {
             dialogueStack = null;
             this.forceActivateNodes = forceActivateNodes;
-            this.displayLevelName = false;
+            this.shouldDisplayLevelName = false;
             this.levelName = "";
+            gamemode = Gamemode.StageSelect;
+            BombPointLoss = 10;
         }
     }
     public static bool IsStageRunning { get; private set; }
+    public static stageSettings ActiveStageSettings { get; private set; }
+    public static void SelectLevel(string s, FishTools.stageSettings settings, ScenePairSO gameScene)
+    {
+        Debug.Log("S : " + s);
+        if (!s.TryFromJson(out FishMapper.DTOListWrapper wrapper, true) || wrapper?.list == null)
+        {
+            Debug.LogError("Invalid Level JSON.");
+            return;
+        }
+        SceneLoader.LoadScenePair(gameScene, () => FishTools.StartStage(wrapper.list, settings));
+    }
+    public static void StartArcadeMode(List<FishArcadeSelector.FishArcadeLevel> levels, ScenePairSO gamescene, ScenePairSO menuScene)
+    {
+        FishTools.stageSettings GetArcadeSettings(string levelName)
+        {
+            FishTools.stageSettings settings = new()
+            {
+                BombPointLoss = 10,
+                dialogueStack = null,
+                gamemode = FishTools.stageSettings.Gamemode.Arcade,
+                forceActivateNodes = true,
+                shouldDisplayLevelName = true,
+                levelName = levelName
+            };
+            return settings;
+        }
+        void LoadWithPayload()
+        {
+            void payload()
+            {
+                StageRoutines.StartRoutine("ARCADE", Co_Run(), true);
+            }
+            gamescene.Load(payload);
+        }
+        IEnumerator Co_Run()
+        {
+            FumoLeaderboard.CurrentLeaderboardKey = "Fibsh_Arcade";
+            GeneralManager.StoreAndResetScore();
+            FishHazardItem.ResetState();
+            StopStage();
+            gamescene.Load();
+            yield return new WaitUntil(() => SceneLoader.IsLoading == false);
+            foreach (var item in levels)
+            {
+                FishTools.stageSettings settings = GetArcadeSettings(item.levelName);
+                if (!item.LevelString.TryFromJson(out FishMapper.DTOListWrapper wrapper, true) || wrapper?.list == null)
+                {
+                    Debug.LogError("Invalid Level JSON.");
+                    continue;
+                }
+                yield return StartStage(wrapper.list, settings);
+            }
+            StopStage();
+            menuScene.Load();
+
+            long score = GeneralManager.VisibleScore.Max(GeneralManager.HighestScore).ToLong();
+            yield return GeneralManager.StoreScoreAsyncWait(score);
+            yield return new WaitUntil(() => SceneLoader.IsLoading == false);
+
+        }
+        LoadWithPayload();
+    }
     public static Coroutine StartStage(List<FishNode.FishRunDataDTO> dto, stageSettings settings)
     {
         List<FishNode.FishRunData> compiled = new();
@@ -163,7 +267,11 @@ public class FishTools : MonoBehaviour
         }
         Debug.Log("Starting Stage with Nodes count : " + fishStage.Count);
         StopStage();
+        ActiveStageSettings = settings;
         FishContinue.LastStage = fishStage;
+        GeneralManager.ApplyHighscoreToSave(GeneralManager.actualScore.Max(GeneralManager.HighestScore));
+        GeneralManager.ResyncHighscore();
+        GeneralManager.RequestScoreRefresh();
         IOrderedEnumerable<FishNode.FishRunData> stage;
         if (settings.forceActivateNodes)
         {
@@ -175,7 +283,7 @@ public class FishTools : MonoBehaviour
         }
         else
         {
-            stage = fishStage.Where(x => x.IsActive).OrderByDescending(x => x.order); ;
+            stage = fishStage.Where(x => x.IsActive).OrderByDescending(x => x.order);
         }
         int totalFish = 0;
         foreach (var item in stage)
@@ -192,7 +300,7 @@ public class FishTools : MonoBehaviour
                 yield return dialogueWait;
             }
             FishCounter.StartSession(totalFish, out WaitUntil w);
-            if (settings.displayLevelName)
+            if (settings.shouldDisplayLevelName)
             {
                 FishCounter.SetLevelText(settings.levelName);
             }
@@ -204,7 +312,7 @@ public class FishTools : MonoBehaviour
             FishCounter.StopSession(FishCounter.FishSessionEnd.CatchAll);
             yield return new WaitUntil(() => IFibsh.TotalFishItems <= 0);
             yield return 1.5f.WaitForSeconds();
-            if (instance != null && instance.IsGameScene)
+            if (instance != null && instance.IsGameScene && ActiveStageSettings.gamemode == stageSettings.Gamemode.StageSelect)
             {
                 instance.sceneSelect.Load();
             }
@@ -231,6 +339,8 @@ public class FishTools : MonoBehaviour
                     GeneralManager.FunnyExplosion(new(item.transform.position, true) { scale = RNG.FloatRange(0.65f, 0.75f) });
                 }
                 f.spawnedObjects.Clear();
+                runningStage = null;
+                ActiveStageSettings = default;
             }
         }
     }

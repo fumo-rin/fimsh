@@ -105,7 +105,6 @@ public class HazardSpammerNode : FishNode
             {
                 for (float i = duration; i > 0f; i = i - interval)
                 {
-                    Debug.Log("Spawning : " + item);
                     float xLerp = xStart.LerpUnclamped(xEnd, 1f - i / duration.Max(0.05f));
                     FishTools.SpawnAndMoveItem(item, new()
                     {

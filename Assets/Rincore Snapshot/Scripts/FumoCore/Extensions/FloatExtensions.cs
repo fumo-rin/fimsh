@@ -265,6 +265,12 @@ namespace RinCore
         {
             return Math.Floor(d);
         }
+        public static double Max(this double d, double other)
+        {
+            if (double.IsNaN(d)) return other;
+            if (double.IsNaN(other)) return d;
+            return other > d ? other : d;
+        }
         public static double Clamp(this double d, double min, double max)
         {
             if (d < min) return min;

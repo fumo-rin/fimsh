@@ -111,6 +111,15 @@ namespace RinCore
                     ""processors"": ""StickDeadzone"",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Main Menu"",
+                    ""type"": ""Button"",
+                    ""id"": ""3c247934-09bc-4fdf-b05a-14e8e41eea2b"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -410,6 +419,39 @@ namespace RinCore
                     ""action"": ""RightStick"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7367b31b-25ea-4831-91e8-95cd7cf0a57f"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Main Menu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""aa8e62a7-0cbe-42d7-8113-e29595b6708c"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Touch"",
+                    ""action"": ""Main Menu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""86b769bf-0455-49c4-b608-8886a868781f"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Main Menu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -1755,6 +1797,7 @@ namespace RinCore
             m_Fumo = asset.FindActionMap("Fumo", throwIfNotFound: true);
             m_Fumo_LeftStick = m_Fumo.FindAction("LeftStick", throwIfNotFound: true);
             m_Fumo_RightStick = m_Fumo.FindAction("RightStick", throwIfNotFound: true);
+            m_Fumo_MainMenu = m_Fumo.FindAction("Main Menu", throwIfNotFound: true);
             // UI
             m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
             m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1884,6 +1927,7 @@ namespace RinCore
         private List<IFumoActions> m_FumoActionsCallbackInterfaces = new List<IFumoActions>();
         private readonly InputAction m_Fumo_LeftStick;
         private readonly InputAction m_Fumo_RightStick;
+        private readonly InputAction m_Fumo_MainMenu;
         /// <summary>
         /// Provides access to input actions defined in input action map "Fumo".
         /// </summary>
@@ -1903,6 +1947,10 @@ namespace RinCore
             /// Provides access to the underlying input action "Fumo/RightStick".
             /// </summary>
             public InputAction @RightStick => m_Wrapper.m_Fumo_RightStick;
+            /// <summary>
+            /// Provides access to the underlying input action "Fumo/MainMenu".
+            /// </summary>
+            public InputAction @MainMenu => m_Wrapper.m_Fumo_MainMenu;
             /// <summary>
             /// Provides access to the underlying input action map instance.
             /// </summary>
@@ -1935,6 +1983,9 @@ namespace RinCore
                 @RightStick.started += instance.OnRightStick;
                 @RightStick.performed += instance.OnRightStick;
                 @RightStick.canceled += instance.OnRightStick;
+                @MainMenu.started += instance.OnMainMenu;
+                @MainMenu.performed += instance.OnMainMenu;
+                @MainMenu.canceled += instance.OnMainMenu;
             }
 
             /// <summary>
@@ -1952,6 +2003,9 @@ namespace RinCore
                 @RightStick.started -= instance.OnRightStick;
                 @RightStick.performed -= instance.OnRightStick;
                 @RightStick.canceled -= instance.OnRightStick;
+                @MainMenu.started -= instance.OnMainMenu;
+                @MainMenu.performed -= instance.OnMainMenu;
+                @MainMenu.canceled -= instance.OnMainMenu;
             }
 
             /// <summary>
@@ -2848,6 +2902,13 @@ namespace RinCore
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnRightStick(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Main Menu" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnMainMenu(InputAction.CallbackContext context);
         }
         /// <summary>
         /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.

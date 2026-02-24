@@ -4954,7 +4954,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 4b14cdac820f78f478ad69c854d73d5e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ed4753a646197504caa1d0ceb090cbba, type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -5167,8 +5167,8 @@ MonoBehaviour:
   Explosion3D: {fileID: 7120986981149515177}
   funnyExplosionSound: {fileID: 11400000, guid: 0ead8eef1f870ce43b9c8b3c9ce9bae4, type: 2}
   breakDownScore: 1
-  visibleScoreDivisor: 0.01
-  visibleScoreMultiplier: 100
+  visibleScoreDivisor: 1
+  visibleScoreMultiplier: 1
   pauseKeybind: {fileID: 0}
 --- !u!114 &1779381781154097865
 MonoBehaviour:

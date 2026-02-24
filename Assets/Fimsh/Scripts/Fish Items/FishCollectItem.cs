@@ -16,7 +16,12 @@ public class FishCollectItem : MonoBehaviour, IFibsh
         bool success = true;
         if (success)
         {
-            FishCounter.CatchFish();
+            FishCounter.CatchFish(1);
+            if (FishTools.ActiveStageSettings.gamemode == FishTools.stageSettings.Gamemode.Arcade)
+            {
+                GeneralManager.AddScore(1d, false);
+                GeneralManager.AddScoreAnalysisKey("Fibsh", 1d);
+            }
         }
         return success;
     }

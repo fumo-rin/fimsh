@@ -380,9 +380,9 @@ public static partial class PersistentJSON
 {
     private const string EncryptionKey = "Fumo Fumo Fumo Fumo";
     public static long ToLong(this double value) =>
-        BitConverter.DoubleToInt64Bits(value);
+    Convert.ToInt64(value);
     public static double ToDouble(this long bits) =>
-        BitConverter.Int64BitsToDouble(bits);
+        Convert.ToDouble(bits);
     public static string EncryptString(this string plainText, string salt = "Mofumofumo")
     {
         using (Aes aes = Aes.Create())

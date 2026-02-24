@@ -7,6 +7,8 @@ using TMPro;
 using UnityEngine.InputSystem;
 using System;
 using UnityEditor;
+using System.Threading.Tasks;
+using System.Linq;
 
 namespace RinCore
 {
@@ -264,10 +266,11 @@ namespace RinCore
         }
         public static void ApplyHighscoreToSave(double value)
         {
-            value.StoreKey(HighScoreStringKey);
+            double currentHighscore = 0d.FetchKey(HighScoreStringKey);
+            value.Max(currentHighscore).StoreKey(HighScoreStringKey);
             Debug.Log($"Storing Score ({HighScoreStringKey}) : " + value.ToString("F0"));
         }
-        static void ResyncHighscore()
+        public static void ResyncHighscore()
         {
             if (!IsHighscorePotentiallyOutOfSync)
                 return;
@@ -310,10 +313,39 @@ namespace RinCore
                     scoreMessage += $"Score Partition({item.Key}) : {item.Value.ToString("F0")}##".ReplaceLineBreaks("##");
                 }
             }
-            if (IsScoreLegit() && !IsEditor)
+            if (IsScoreLegit())
             {
                 long LeaderboardScore = score;
                 _ = FumoLeaderboard.SubmitScoreAsync(LeaderboardScore);
+            }
+        }
+        public static async Task StoreScoreAsyncWait(long score)
+        {
+            Debug.Log(score);
+            if (score <= 0)
+            {
+                return;
+            }
+            ApplyHighscoreToSave(LoadHighScore());
+            if (ScoreBreakdownAnalysis != null)
+            {
+                foreach (var item in ScoreBreakdownAnalysis)
+                {
+                    string scoreMessage = "Score Breakdown##".ReplaceLineBreaks("##");
+                    scoreMessage += $"Score Partition({item.Key}) : {item.Value.ToString("F0")}##".ReplaceLineBreaks("##");
+                }
+            }
+            if (IsScoreLegit())
+            {
+                try
+                {
+                    long LeaderboardScore = score;
+                    await FumoLeaderboard.SubmitScoreAsync(LeaderboardScore);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogWarning($"StoreScoreAsyncWait failed: {e}");
+                }
             }
         }
     }

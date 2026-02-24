@@ -371,6 +371,7 @@ namespace RinCore
         }
         private static Vector2 QuantizeToStepSizeWithBias(this Vector2 vector, Rect biasRect, float stepSize = 45f)
         {
+            
             if (vector.sqrMagnitude < 0.001f) return Vector2.zero;
             float scaleX = biasRect.width > 0 ? 1f / biasRect.width : 1f;
             float scaleY = biasRect.height > 0 ? 1f / biasRect.height : 1f;

@@ -2669,6 +2669,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: rinCore::RinCore.FumoMenuSceneButton
   sceneToLoad: {fileID: 11400000, guid: c76f579821e723f489fd292dc9994475, type: 2}
+  buildTarget: 14
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

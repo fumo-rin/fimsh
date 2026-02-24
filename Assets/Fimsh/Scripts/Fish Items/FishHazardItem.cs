@@ -32,14 +32,36 @@ public class FishHazardItem : MonoBehaviour, IFibsh
 
         return $"a {word}";
     }
+    static float nextBombTimeScoreLoss = 0f;
+    public static void ResetState()
+    {
+        nextBombTimeScoreLoss = 0f;
+    }
     public bool TryCollect(FishPlayer p)
     {
         GeneralManager.FunnyExplosion(new(transform.position, true) { scale = 2f });
         if (!FishTools.IsEditing)
         {
-            FishTools.StopStage();
-            FishContinue.Show(1f);
-            FishCounter.StopSession(FishCounter.FishSessionEnd.Hazard, $"{WithIndefiniteArticle(category.ToSpacedString())}");
+            switch (FishTools.ActiveStageSettings.gamemode)
+            {
+                case FishTools.stageSettings.Gamemode.StageSelect:
+                    FishTools.StopStage();
+                    FishContinue.Show(1f);
+                    FishCounter.StopSession(FishCounter.FishSessionEnd.Hazard,
+                        $"{WithIndefiniteArticle(category.ToSpacedString())}");
+                    break;
+                case FishTools.stageSettings.Gamemode.Arcade:
+                    if (Time.time < nextBombTimeScoreLoss)
+                        break;
+
+                    double scoreToRemove = -((float)GeneralManager.actualScore).Min(10f);
+                    GeneralManager.AddScoreAnalysisKey("Fibsh", scoreToRemove);
+                    GeneralManager.AddScore(scoreToRemove, false);
+                    nextBombTimeScoreLoss = Time.time + 0.333f;
+                    break;
+                default:
+                    break;
+            }
         }
         return true;
     }

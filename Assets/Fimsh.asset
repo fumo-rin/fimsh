@@ -35,6 +35,7 @@ MonoBehaviour:
   - {fileID: 7767395331461330098}
   - {fileID: 7164616573833133073}
   - {fileID: -6101347193781703986}
+  - {fileID: 3247083719775823510}
   showTitle: 1
   doubleSpacing: 0
   spacingOverride: 
@@ -53,6 +54,22 @@ MonoBehaviour:
   Priority: 0
   Title: 
   username: upside down cinnamon
+  Website: 
+--- !u!114 &3247083719775823510
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab15c5f82e869144a8b0664a90e848eb, type: 3}
+  m_Name: ' : Zerodude'
+  m_EditorClassIdentifier: rinCore::RinCore.CreditsSO
+  Priority: -36
+  Title: 
+  username: Zerodude
   Website: 
 --- !u!114 &7164616573833133073
 MonoBehaviour:

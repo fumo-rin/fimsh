@@ -10,6 +10,7 @@ public class FishCounter : MonoBehaviour
     [SerializeField] Animator fishAnimator;
     [SerializeField] TMP_Text fishText, levelText;
     [SerializeField] string catchFishAnimKey = "CATCHFISH";
+    public static int SessionCaughtFish { get; private set; }
     private void Awake()
     {
         instance = this;
@@ -17,6 +18,7 @@ public class FishCounter : MonoBehaviour
     }
     public static void StartSession(int fishCounter, out WaitUntil wait)
     {
+        SessionCaughtFish = 0;
         FishRemaining = fishCounter;
         CurrentMaxFishCount = fishCounter;
         FishPopup.TriggerPopup($"Catch##{FishRemaining.ToString().Color(ColorHelper.PastelOrange)} Fishms!".ReplaceLineBreaks("##"));
@@ -40,7 +42,7 @@ public class FishCounter : MonoBehaviour
             switch (reason)
             {
                 case FishSessionEnd.CatchAll:
-                    f.SetFishCountLeft("Caught All Fish!".Color(ColorHelper.PastelGreen));
+                    f.SetFishCountLeft($"Caught {SessionCaughtFish} Fish!".Color(ColorHelper.PastelGreen));
                     break;
                 case FishSessionEnd.MissCatch:
                     f.SetFishCountLeft($"Missed {(flavour == "" ? "a fish" : flavour)}!".Color(ColorHelper.PastelRed));
@@ -64,10 +66,8 @@ public class FishCounter : MonoBehaviour
     }
     public static void SetLevelText(string text)
     {
-        Debug.Log("Trying to set fishcounter level text");
         if (instance is FishCounter f && f.gameObject != null && f.gameObject.activeInHierarchy)
         {
-            Debug.Log("Bwuz");
             f.levelText.text = text;
         }
         else
@@ -75,11 +75,12 @@ public class FishCounter : MonoBehaviour
             Debug.LogWarning("Failed to set fishcounter text");
         }
     }
-    public static void CatchFish()
+    public static void CatchFish(int value)
     {
         if (instance == null)
             return;
 
+        SessionCaughtFish += value;
         FishRemaining--;
         FishRemaining = FishRemaining.Clamp(0, CurrentMaxFishCount);
         if (instance is FishCounter f && f.gameObject != null && f.gameObject.activeInHierarchy)

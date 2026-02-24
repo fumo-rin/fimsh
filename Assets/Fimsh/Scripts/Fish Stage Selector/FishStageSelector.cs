@@ -60,22 +60,15 @@ public class FishStageSelector : MonoBehaviour
             Debug.LogError($"Invalid Level : Act {act} Level {level}");
             return;
         }
-        SelectLevel(levelString, new()
+        FishTools.SelectLevel(levelString, new()
         {
             dialogueStack = null,
             forceActivateNodes = true,
-            displayLevelName = true,
+            shouldDisplayLevelName = true,
             levelName = levelName,
-        });
-    }
-    void SelectLevel(string s, FishTools.stageSettings settings)
-    {
-        if (!s.TryFromJson(out FishMapper.DTOListWrapper wrapper, true) || wrapper?.list == null)
-        {
-            Debug.LogError("Invalid Level JSON.");
-            return;
-        }
-        SceneLoader.LoadScenePair(gameScene, () => FishTools.StartStage(wrapper.list, settings));
+            BombPointLoss = 0,
+            gamemode = FishTools.stageSettings.Gamemode.StageSelect
+        }, gameScene);
     }
     private void DestroyAll()
     {

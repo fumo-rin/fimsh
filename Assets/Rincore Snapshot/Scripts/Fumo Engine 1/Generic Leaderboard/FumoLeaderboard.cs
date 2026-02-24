@@ -16,7 +16,7 @@ namespace RinCore
     public partial class FumoLeaderboard
     {
         [SerializeField] List<string> leaderBoardKeys = new();
-        [SerializeField] Button incrementIndex, decrementIndex;
+        [SerializeField] Button leaderboardKeyUp, leaderboardKeyDown;
         [SerializeField] Button nextPageButton, prevPageButton;
         [SerializeField] private TMP_Text leaderboardTitleText;
         [SerializeField] private TMP_Text pageText;
@@ -62,8 +62,8 @@ namespace RinCore
 
         private void StartLeaderboardSelector()
         {
-            if (incrementIndex != null) incrementIndex.BindSingleAction(() => CycleLeaderboard(1));
-            if (decrementIndex != null) decrementIndex.BindSingleAction(() => CycleLeaderboard(-1));
+            if (leaderboardKeyUp != null) leaderboardKeyUp.BindSingleAction(() => CycleLeaderboard(1));
+            if (leaderboardKeyDown != null) leaderboardKeyDown.BindSingleAction(() => CycleLeaderboard(-1));
             if (nextPageButton != null) nextPageButton.BindSingleAction(() => CyclePage(1));
             if (prevPageButton != null) prevPageButton.BindSingleAction(() => CyclePage(-1));
 
@@ -204,25 +204,39 @@ namespace RinCore
         }
         public static async Task SubmitScoreAsync(long score)
         {
+            const int TIMEOUT_MS = 3000;
             string key = CurrentLeaderboardKey;
-            if (score <= 0d)
-            {
+
+            if (score <= 0)
                 return;
-            }
+
             if (string.IsNullOrEmpty(key))
             {
                 Debug.LogWarning("Leaderboard key is null or empty!");
                 return;
             }
+
             bool ready = await UGSInitializer.IsReadyAsync();
             if (!ready)
             {
                 Debug.LogWarning("[FumoLeaderboard] UGS not ready — cannot submit score.");
                 return;
             }
+
             try
             {
-                var result = await LeaderboardsService.Instance.AddPlayerScoreAsync(key, score);
+                var submitTask = LeaderboardsService.Instance.AddPlayerScoreAsync(key, score);
+
+                var completedTask = await Task.WhenAny(submitTask, Task.Delay(TIMEOUT_MS));
+
+                if (completedTask != submitTask)
+                {
+                    Debug.LogWarning($"Score submission timed out after {TIMEOUT_MS}ms.");
+                    return;
+                }
+
+                var result = await submitTask;
+
                 Debug.Log($"Score {result.Score} submitted successfully to {key} for player {AuthenticationService.Instance.PlayerId}.");
 
                 if (instance != null && instance.cachedLeaderboards.ContainsKey(key))

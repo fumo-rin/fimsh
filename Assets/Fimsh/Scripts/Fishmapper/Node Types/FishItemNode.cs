@@ -82,7 +82,6 @@ public class FishItemNode : FishNode
         public override int FishValue =>
             action == FishNodeAction.SpawnFish ? repeats : 0;
     }
-
     public override IEnumerator DrawNode(FishProperties propDrawer)
     {
         var addedDelaySlider = MakeFloatSlider(propDrawer, "Added Post Delay", fishData.addedPostDelay, 10f, 0f);
