@@ -59,7 +59,7 @@ QualitySettings:
     terrainFadeLength: 5
     terrainMaxTrees: 50
     excludedTargetPlatforms:
-    - Standalone
+    - WebGL
   - serializedVersion: 5
     name: PC
     pixelLightCount: 0
@@ -115,6 +115,7 @@ QualitySettings:
     excludedTargetPlatforms:
     - Android
     - iPhone
+    - WebGL
   m_TextureMipmapLimitGroupNames: []
   m_PerPlatformDefaultQuality:
     Android: 0
@@ -128,7 +129,7 @@ QualitySettings:
     Server: 0
     Stadia: 0
     Standalone: 1
-    WebGL: 0
+    WebGL: 1
     Windows Store Apps: 0
     XboxOne: 0
     iPhone: 0

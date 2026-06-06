@@ -580,6 +580,36 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FishStageSelector
   actText: {fileID: 2143451381}
+  WebGlLevelCollection:
+    categories:
+    - categoryName: Normal Act
+      infoFile: {fileID: 4900000, guid: 6049b00567daed940a4f16f8baf64db1, type: 3}
+      creditsFile: {fileID: 4900000, guid: d2979839830bc12429e1c370625b5188, type: 3}
+      levels:
+      - levelFile: {fileID: 4900000, guid: 2d155ddf41de0fb42922c92d09a6fbb2, type: 3}
+      - levelFile: {fileID: 4900000, guid: ffb7e512ae967ad42aae930b14afd34a, type: 3}
+      - levelFile: {fileID: 4900000, guid: c79c2f0e6bfebd24c80213c404d4b7a4, type: 3}
+      - levelFile: {fileID: 4900000, guid: a20b0a86452123c4aa8fcf18e80f5180, type: 3}
+      - levelFile: {fileID: 4900000, guid: 08aa75683503c154eb934fa5578aedf2, type: 3}
+      - levelFile: {fileID: 4900000, guid: 0fd6d807b46d4f649b6fb0ea4afc4ecb, type: 3}
+    - categoryName: Hard Act
+      infoFile: {fileID: 4900000, guid: a16e455dabeb49843b8d6730d7258e6d, type: 3}
+      creditsFile: {fileID: 4900000, guid: cd6a32e71c52ce04fb5e3b92b21fda1d, type: 3}
+      levels:
+      - levelFile: {fileID: 4900000, guid: 9de756bd00f6dbc41b4501da79d73527, type: 3}
+      - levelFile: {fileID: 4900000, guid: 1770aaea9a9f8384c85dffbacf4129d2, type: 3}
+      - levelFile: {fileID: 4900000, guid: db8305b62adbf2048b9207d34e5dbf25, type: 3}
+      - levelFile: {fileID: 4900000, guid: 8a833136bc5e9aa4e9cace2da5d815a6, type: 3}
+      - levelFile: {fileID: 4900000, guid: 44a97ca9b0c60af4f9040e568b446465, type: 3}
+      - levelFile: {fileID: 4900000, guid: 5c499880a45758d4f950dcff4b3821d7, type: 3}
+    - categoryName: Lunatic Act
+      infoFile: {fileID: 4900000, guid: f820d353636422d42a3c20f9e4923bf4, type: 3}
+      creditsFile: {fileID: 4900000, guid: 5cb7bc8de93d335418091d16e77dfec7, type: 3}
+      levels:
+      - levelFile: {fileID: 4900000, guid: d683f8c81bdb63c41aa538288a83e020, type: 3}
+      - levelFile: {fileID: 4900000, guid: 2a837034d4c0cf843be1736dbc64f628, type: 3}
+      - levelFile: {fileID: 4900000, guid: 1bda260a56132fb43af37ba9c630cd7e, type: 3}
+      - levelFile: {fileID: 4900000, guid: 3588d307264d9ed49947b1f70397d99a, type: 3}
   LevelSelectButton: {fileID: 276659973}
   createdItemsAnchor: {fileID: 1041241372}
   gameScene: {fileID: 11400000, guid: 3cbdbe54000d2c543b17a3b6ddb85a71, type: 2}

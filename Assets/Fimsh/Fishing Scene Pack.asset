@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31b5e29520f984e419ac6da7a9f8f900, type: 3}
   m_Name: Fishing Scene Pack
   m_EditorClassIdentifier: rinCore::ScenePackSO
-  firstLoadScene: {fileID: 102900000, guid: c071491277358cf41a7aaefd92959e49, type: 3}
+  firstLoadScene: {fileID: 102900000, guid: edc1aef08908b3d41b1ac0d110700897, type: 3}
   scenePairSOFolders:
   - {fileID: 102900000, guid: 62f64e182fedcf741a708fbd990b20a6, type: 3}

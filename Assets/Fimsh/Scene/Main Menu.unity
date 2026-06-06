@@ -1148,7 +1148,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: rinCore::RinCore.FumoMenuSceneButton
   sceneToLoad: {fileID: 11400000, guid: 0799b4d30d8297244b2e57f56963c17b, type: 2}
-  buildTarget: 12
+  buildTarget: -1
 --- !u!1001 &1092956964
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1739,7 +1739,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: rinCore::RinCore.FumoMenuSceneButton
   sceneToLoad: {fileID: 11400000, guid: 9b05ac23ad7d18a4592544c40dd5952b, type: 2}
-  buildTarget: 12
+  buildTarget: -1
 --- !u!114 &1579482147
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1902,7 +1902,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: rinCore::RinCore.FumoMenuSceneButton
   sceneToLoad: {fileID: 11400000, guid: 80d302373f6bcd149a2d6772e6dbd411, type: 2}
-  buildTarget: 14
+  buildTarget: -1
 --- !u!1001 &1844699320
 PrefabInstance:
   m_ObjectHideFlags: 0
